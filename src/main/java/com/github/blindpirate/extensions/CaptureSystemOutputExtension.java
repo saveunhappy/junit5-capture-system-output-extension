@@ -45,6 +45,7 @@ class CaptureSystemOutputExtension implements BeforeEachCallback, AfterEachCallb
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
+        //在所有的方法执行之前，就把输入流和输出流换成了自己的输入和输出流
         getOutputCapture(context).captureOutput();
     }
 
@@ -52,6 +53,7 @@ class CaptureSystemOutputExtension implements BeforeEachCallback, AfterEachCallb
     public void afterEach(ExtensionContext context) throws Exception {
         OutputCapture outputCapture = getOutputCapture(context);
         try {
+            //在结束之后，获取到自己添加的hamcrest校验规则，然后判断是否匹配
             if (!outputCapture.matchers.isEmpty()) {
                 String output = outputCapture.toString();
                 assertThat(output, allOf(outputCapture.matchers));
@@ -64,7 +66,12 @@ class CaptureSystemOutputExtension implements BeforeEachCallback, AfterEachCallb
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        //com.github.blindpirate.extensions.CaptureSystemOutputExtensionTest
+        // 中的一个方法 systemOut，
+        // 该方法接受一个参数
+        // com.github.blindpirate.extensions.CaptureSystemOutput$OutputCapture。
         boolean isTestMethodLevel = extensionContext.getTestMethod().isPresent();
+        //这里在判断类型是否是OutputCapture类型的，如果这两个条件都满足了，那么这个参数就是支持的，当然，这个支持的定义还是自己定义的。
         boolean isOutputCapture = parameterContext.getParameter().getType() == OutputCapture.class;
         return isTestMethodLevel && isOutputCapture;
     }

@@ -83,18 +83,7 @@ publishing {
     }
 
     repositories {
-        maven {
-            url = version.endsWith('SNAPSHOT') ? SNAPSHOT_REPOSITORY_URL : RELEASE_REPOSITORY_URL
-
-            authentication {
-                basic(BasicAuthentication) {
-                    credentials {
-                        username = NEXUS_USERNAME
-                        password = NEXUS_PASSWORD
-                    }
-                }
-            }
-        }
+        mavenCentral()
     }
 }
 
